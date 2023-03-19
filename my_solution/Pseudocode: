@@ -1,0 +1,64 @@
+Pseudocode:
+
+1. Standardize the dataset
+- Calculate the mean and standard deviation of each variable
+- Subtract the mean from each variable and divide by the standard deviation
+
+2. Calculate the covariance matrix
+- Calculate the dot product of the standardized dataset with its transpose
+
+3. Calculate the eigenvectors and eigenvalues of the covariance matrix
+- Use a linear algebra library to do this
+
+4. Sort the eigenvectors and eigenvalues in descending order by the eigenvalues
+
+5. Select the top k eigenvectors based on the explained variance 
+(i.e choose the k PCs) (NB: eigval represents the variance of feature in the new space; in the best situation, we want to have the new cov mat diagonal, so no correlation between features, and only variance. Furthermore, the higher the eigenvalue, the more the total variance "lay" in the direction of the correspondin eigenvector. So we wanna choose as PC the eigevectore corresponding to the higher eigval.)
+
+- Calculate the total sum of eigenvalues
+- Calculate the percentage of variance explained by each eigenvector by dividing its eigenvalue by the total sum
+- Sort the eigenvectors by their corresponding explained variances in descending order
+- (optional) Choose the top k eigenvectors that explain the most variance (e.g. top 3, 5, etc.)
+
+6. Transform the dataset into the new subspace
+- Take the dot product of the standardized dataset with the selected eigenvectors to create a new dataset in a lower-dimensional space.
+
+
+7. Generate an elbow curve to determine the optimal number of principal components to use
+- Select a range of k values
+- For each k value, repeat steps 1-6 and calculate the cumulative explained variance
+- Plot the cumulative explained variance against the number of principal components
+- Determine the k value at the "elbow" of the curve, which indicates the point of diminishing returns in explained variance
+
+Code:
+
+```python
+import numpy as np
+from sklearn.preprocessing import StandardScaler
+
+# 1. Standardize the dataset
+scaler = StandardScaler()
+X_std = scaler.fit_transform(X)
+
+# 2. Calculate the covariance matrix
+cov_mat = np.cov(X_std.T)
+
+# 3. Calculate the eigenvectors and eigenvalues of the covariance matrix
+eig_vals, eig_vecs = np.linalg.eig(cov_mat)
+
+# 4. Sort the eigenvectors and eigenvalues
+eig_pairs = [(np.abs(eig_vals[i]), eig_vecs[:,i]) for i in range(len(eig_vals))]
+eig_pairs.sort(key=lambda x: x[0], reverse=True)
+
+# 5. Select the top k eigenvectors based on the explained variance
+tot = sum(eig_vals)
+var_exp = [(i / tot)*100 for i in sorted(eig_vals, reverse=True)]
+cum_var_exp = np.cumsum(var_exp)
+n_components = 2 # choose the number of components
+top_k = eig_pairs[:n_components]
+W = np.hstack((top_k[0][1].reshape(13,1), top_k[1][1].reshape(13,1)))
+
+# 6. Transform the dataset into the new subspace
+X_pca = X_std.dot(W)
+
+```
