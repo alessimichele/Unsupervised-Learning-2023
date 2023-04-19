@@ -10,3 +10,7 @@ Tutor: Ilaria Vascotto
 * [Lab 3](Lab3.pdf): Isomap ([sol](Notebooks/Lab3-Isomap.ipynb))
 * [Lab 4](Lab4.pdf): Kernel PCA ([sol](Notebooks/Lab4-KernelPCA.ipynb))
 * [Lab 5](Lab5.pdf): Recap on Dimensionality Dimension Techniques ([hint](Notebooks/Lab5-DimensionalityReduction.ipynb))
+
+Code to be reorganized:
+  - sistemare isomap
+  - sistemare kernel PCA
