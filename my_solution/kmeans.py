@@ -313,6 +313,7 @@ class MyKmeans:
         def plot_iteration(i):
             cmap = plt.get_cmap("jet", self.k)
             plt.scatter(X[:, 0], X[:, 1], c=self.z_history[:, i], cmap=cmap)
+            plt.title(f'Algorithm: {self.algorithm_variant}')
             plt.scatter(self.C_history[:, 0, i], self.C_history[:, 1, i], marker="x")
 
         slider = IntSlider(min=0, max=self.n_iterations, step=1, value=0)
